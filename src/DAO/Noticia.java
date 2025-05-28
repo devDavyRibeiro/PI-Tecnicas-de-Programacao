@@ -25,6 +25,10 @@ public class Noticia {
         this.dataPuclicacao = dataPuclicacao;
     }
 
+    public Noticia() {
+    }
+   
+
     public int getId() {
         return id;
     }
@@ -100,5 +104,24 @@ public class Noticia {
         }
     }
     
-    
+    public String valuesInsereNoticia(){
+        String dados = 
+        "'" + getTitulo() + "'," +
+        "'" + getDescricao() + "'," +
+        "'" + getDataPuclicacao()+ "'," +
+        "'" + getIdAdmin()+ "'" 
+        ;
+        return dados;
+    }
+     
+    public String valuesAlterarNoticia(){
+        String dados =
+        "titulo='" + getTitulo() + "'," +
+        "descricao='" + getDescricao()+ "'," +
+        "data='" + getDataPuclicacao()+ "'," +
+        "fkAdmin='" + getIdAdmin()+ "'" 
+        ;
+        return dados;
+    }
+
 }

@@ -4,11 +4,14 @@
  */
 package VIEW;
 import DAO.Noticia;
+import DAO.connectDAO;
 /**
  *
  * @author Trabalhos
  */
 public class FormNoticia extends javax.swing.JFrame {
+    private String operacaoGlobal;
+    private String operacaoAtiva;
 
     public FormNoticia() {
         initComponents();
@@ -16,6 +19,26 @@ public class FormNoticia extends javax.swing.JFrame {
 
     public FormNoticia(String operacao){
         initComponents();
+        
+        setOperacaoGlobal(operacao);
+        
+        setOperacaoAtiva("Inserir");
+        
+        if(getOperacaoAtiva().equals(getOperacaoGlobal())){
+            setVisibleForm(true);
+            jTextField_ID.setVisible(false);
+            jLabel_ID.setVisible(false);
+            jButtonSuccess.setText("Cadastrar");
+        }
+        
+        setOperacaoAtiva("Alteração");
+        if(getOperacaoAtiva().equals(getOperacaoGlobal())){
+            setVisibleForm(false);
+            jTextField_ID.setVisible(true);
+            jLabel_ID.setVisible(true);
+            jButtonSuccess.setText("Pesquisar");
+        }
+        
     }
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -88,6 +111,11 @@ public class FormNoticia extends javax.swing.JFrame {
         jButtonSuccess.setFont(new java.awt.Font("Lucida Sans", 0, 12)); // NOI18N
         jButtonSuccess.setText("Cadastrar");
         jButtonSuccess.setName("btnSubmit"); // NOI18N
+        jButtonSuccess.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonSuccessActionPerformed(evt);
+            }
+        });
 
         jTextAreaDescricao.setColumns(20);
         jTextAreaDescricao.setFont(new java.awt.Font("Lucida Sans", 0, 12)); // NOI18N
@@ -175,13 +203,29 @@ public class FormNoticia extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+    public String getOperacaoAtiva() {
+        return operacaoAtiva;
+    }
 
+    public void setOperacaoAtiva(String operacaoAtiva) {
+        this.operacaoAtiva = operacaoAtiva;
+    }
+
+    public String getOperacaoGlobal() {
+        return operacaoGlobal;
+    }
+
+    public void setOperacaoGlobal(String operacaoGlobal) {
+        this.operacaoGlobal = operacaoGlobal;
+    }
+    
     private void setVisibleForm(boolean visibilidade){
         jLabel_ID.setVisible(visibilidade);
         jLabel_Titulo.setVisible(visibilidade);
         jLabel_Data.setVisible(visibilidade);
         jLabel_Descricao.setVisible(visibilidade);
         jLabel_IdAdmin.setVisible(visibilidade);
+        
         jTextField_ID.setVisible(visibilidade);
         jTextField_Titulo.setVisible(visibilidade);
         jTextField_Data.setVisible(visibilidade);
@@ -208,11 +252,56 @@ public class FormNoticia extends javax.swing.JFrame {
         jTextField_Data.setText("");
         jTextField_ID.setText("");
     }
+    private void PesquisarNoticia(){
+        Noticia noticia;
+        connectDAO con = new  connectDAO();
+        
+        noticia = con.pesquisaNoticia("ID = '" + jTextField_ID.getText() + "'");
+        
+        setForm(noticia);
+        setVisibleForm(true);
+    }
     private void jButtonCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCancelActionPerformed
         // TODO add your handling code here:
         setVisible(false);
         dispose();
     }//GEN-LAST:event_jButtonCancelActionPerformed
+
+    private void jButtonSuccessActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSuccessActionPerformed
+        setOperacaoAtiva("Inserir");   
+        if(getOperacaoAtiva().equals(getOperacaoGlobal())){
+            Noticia noticia = new Noticia();
+            connectDAO con = new  connectDAO();
+            setNoticia(noticia);
+            
+            con.insereRegistros("Noticias", noticia.valuesInsereNoticia() );
+            
+            setVisibleForm(false);
+            LimparForm();
+        }
+        
+        setOperacaoAtiva("");
+        if(getOperacaoAtiva().equals(getOperacaoGlobal())){
+            Noticia noticia = new Noticia();
+            connectDAO con = new  connectDAO();
+            
+            setNoticia(noticia);
+            con.alteraRegistroJFDB("Noticias", noticia.valuesAlterarNoticia(), "id='" + jTextField_ID.getText() + "'" );
+            
+            setVisibleForm(false);
+            LimparForm();
+        }
+        
+        setOperacaoAtiva("Alteração");
+        if(getOperacaoAtiva().equals(getOperacaoGlobal())){
+            PesquisarNoticia();
+            jLabel_ID.setEnabled(false);
+            jButtonSuccess.setText("Alterar");
+            setOperacaoGlobal("Alterar");
+            
+        }
+        
+    }//GEN-LAST:event_jButtonSuccessActionPerformed
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
