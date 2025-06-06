@@ -3,7 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package VIEW;
-import DAO.Noticia;
+import CLASSES.Noticia;
 import DAO.connectDAO;
 /**
  *
@@ -22,21 +22,35 @@ public class FormNoticia extends javax.swing.JFrame {
         
         setOperacaoGlobal(operacao);
         
-        setOperacaoAtiva("Inserir");
+        setOperacaoAtiva("Incluir");
         
         if(getOperacaoAtiva().equals(getOperacaoGlobal())){
+            jLabelTituloForm.setText("Notícia - Cadastrar");
             setVisibleForm(true);
             jTextField_ID.setVisible(false);
             jLabel_ID.setVisible(false);
             jButtonSuccess.setText("Cadastrar");
+            jButtonPesquisar.setVisible(false);
         }
         
-        setOperacaoAtiva("Alteração");
+        setOperacaoAtiva("PesquisaAlterar");
         if(getOperacaoAtiva().equals(getOperacaoGlobal())){
+            jLabelTituloForm.setText("Notícia - Editar");
             setVisibleForm(false);
             jTextField_ID.setVisible(true);
             jLabel_ID.setVisible(true);
-            jButtonSuccess.setText("Pesquisar");
+            jButtonPesquisar.setVisible(true);
+            jButtonSuccess.setVisible(false);
+        }
+        
+        setOperacaoAtiva("PesquisaExclusao");
+        if(getOperacaoAtiva().equals(getOperacaoGlobal())){
+            jLabelTituloForm.setText("Notícia - Excluir");
+            setVisibleForm(false);
+            jTextField_ID.setVisible(true);
+            jLabel_ID.setVisible(true);
+            jButtonPesquisar.setVisible(true);
+            jButtonSuccess.setVisible(false);
         }
         
     }
@@ -58,8 +72,9 @@ public class FormNoticia extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextAreaDescricao = new javax.swing.JTextArea();
         jSeparator1 = new javax.swing.JSeparator();
-        jLabel6 = new javax.swing.JLabel();
+        jLabelTituloForm = new javax.swing.JLabel();
         jSeparator2 = new javax.swing.JSeparator();
+        jButtonPesquisar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -122,8 +137,15 @@ public class FormNoticia extends javax.swing.JFrame {
         jTextAreaDescricao.setRows(5);
         jScrollPane1.setViewportView(jTextAreaDescricao);
 
-        jLabel6.setFont(new java.awt.Font("Lucida Sans", 0, 18)); // NOI18N
-        jLabel6.setText("Notícias");
+        jLabelTituloForm.setFont(new java.awt.Font("Lucida Sans", 0, 18)); // NOI18N
+        jLabelTituloForm.setText("Notícias");
+
+        jButtonPesquisar.setText("Pesquisar");
+        jButtonPesquisar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonPesquisarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -158,18 +180,20 @@ public class FormNoticia extends javax.swing.JFrame {
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                                 .addGap(10, 10, 10)
                                 .addComponent(jButtonSuccess)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButtonPesquisar)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(jButtonCancel)))
                         .addGap(22, 22, 22))
                     .addComponent(jSeparator2)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel6)
+                        .addComponent(jLabelTituloForm)
                         .addGap(0, 0, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jLabel6)
+                .addComponent(jLabelTituloForm)
                 .addGap(2, 2, 2)
                 .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -197,7 +221,8 @@ public class FormNoticia extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButtonSuccess)
-                    .addComponent(jButtonCancel))
+                    .addComponent(jButtonCancel)
+                    .addComponent(jButtonPesquisar))
                 .addGap(43, 43, 43))
         );
 
@@ -220,16 +245,15 @@ public class FormNoticia extends javax.swing.JFrame {
     }
     
     private void setVisibleForm(boolean visibilidade){
-        jLabel_ID.setVisible(visibilidade);
         jLabel_Titulo.setVisible(visibilidade);
         jLabel_Data.setVisible(visibilidade);
         jLabel_Descricao.setVisible(visibilidade);
         jLabel_IdAdmin.setVisible(visibilidade);
         
-        jTextField_ID.setVisible(visibilidade);
         jTextField_Titulo.setVisible(visibilidade);
         jTextField_Data.setVisible(visibilidade);
         jTextAreaDescricao.setVisible(visibilidade);
+        jTextField_IDAdmin.setVisible(visibilidade);
     }
     private void setNoticia(Noticia noticia){
         noticia.setId(Integer.parseInt(jTextField_ID.getText()));
@@ -243,14 +267,14 @@ public class FormNoticia extends javax.swing.JFrame {
         jTextField_Titulo.setText(noticia.getTitulo());
         jTextAreaDescricao.setText(noticia.getDescricao());
         jTextField_Data.setText(noticia.getDataPuclicacao());
-        jTextField_ID.setText(Integer.toString(noticia.getIdAdmin()));
+        jTextField_IDAdmin.setText(Integer.toString(noticia.getIdAdmin()));
     }
     private void LimparForm(){
         jTextField_ID.setText("");
         jTextField_Titulo.setText("");
         jTextAreaDescricao.setText("");
         jTextField_Data.setText("");
-        jTextField_ID.setText("");
+        jTextField_IDAdmin.setText("");
     }
     private void PesquisarNoticia(){
         Noticia noticia;
@@ -280,28 +304,37 @@ public class FormNoticia extends javax.swing.JFrame {
             LimparForm();
         }
         
-        setOperacaoAtiva("");
+        setOperacaoAtiva("Alteracao");
         if(getOperacaoAtiva().equals(getOperacaoGlobal())){
             Noticia noticia = new Noticia();
             connectDAO con = new  connectDAO();
             
             setNoticia(noticia);
-            con.alteraRegistroJFDB("Noticias", noticia.valuesAlterarNoticia(), "id='" + jTextField_ID.getText() + "'" );
+            con.alteraRegistroJFDB("Noticias", noticia.valuesAlterarNoticia(), "ID='" + jTextField_ID.getText() + "'" );
             
             setVisibleForm(false);
             LimparForm();
         }
-        
-        setOperacaoAtiva("Alteração");
+    }//GEN-LAST:event_jButtonSuccessActionPerformed
+
+    private void jButtonPesquisarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonPesquisarActionPerformed
+        setOperacaoAtiva("PesquisaAlterar");
         if(getOperacaoAtiva().equals(getOperacaoGlobal())){
             PesquisarNoticia();
             jLabel_ID.setEnabled(false);
+            jButtonSuccess.setVisible(true);
             jButtonSuccess.setText("Alterar");
-            setOperacaoGlobal("Alterar");
-            
+            setOperacaoGlobal("Alteracao"); 
         }
-        
-    }//GEN-LAST:event_jButtonSuccessActionPerformed
+        setOperacaoAtiva("PesquisaExclusao");
+        if(getOperacaoAtiva().equals(getOperacaoGlobal())){
+            PesquisarNoticia();
+            jLabel_ID.setEnabled(false);
+            jButtonSuccess.setVisible(true);
+            jButtonSuccess.setText("Excluir");
+            setOperacaoGlobal("Exclusao"); 
+        }
+    }//GEN-LAST:event_jButtonPesquisarActionPerformed
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
@@ -337,8 +370,9 @@ public class FormNoticia extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonCancel;
+    private javax.swing.JButton jButtonPesquisar;
     private javax.swing.JButton jButtonSuccess;
-    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabelTituloForm;
     private javax.swing.JLabel jLabel_Data;
     private javax.swing.JLabel jLabel_Descricao;
     private javax.swing.JLabel jLabel_ID;

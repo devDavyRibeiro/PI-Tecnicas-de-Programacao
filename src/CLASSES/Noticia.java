@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package DAO;
+package CLASSES;
 
 import javax.swing.JOptionPane;
 
@@ -50,7 +50,7 @@ public class Noticia {
         if(titulo.isBlank() && titulo.isEmpty()){
             JOptionPane.showMessageDialog(null, "Título Vazio"); 
         }
-        else if(titulo.length() > 50){
+        else if(titulo.length() > 150){
             JOptionPane.showMessageDialog(null, "Título muito grande"); 
         }
         else{
@@ -67,7 +67,7 @@ public class Noticia {
         if(descricao.isBlank() && titulo.isEmpty()){
             JOptionPane.showMessageDialog(null, "Descrição vazia"); 
         }
-        else if(descricao.length() > 50){
+        else if(descricao.length() > 500){
             JOptionPane.showMessageDialog(null, "Descrição muito grande"); 
         }
         else{

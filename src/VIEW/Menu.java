@@ -29,10 +29,10 @@ public class Menu extends javax.swing.JFrame {
         jMenu1 = new javax.swing.JMenu();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu7 = new javax.swing.JMenu();
-        jMenuItem6 = new javax.swing.JMenuItem();
-        jMenuItem22 = new javax.swing.JMenuItem();
-        jMenuItem23 = new javax.swing.JMenuItem();
-        jMenuItem24 = new javax.swing.JMenuItem();
+        jMenuItemIncluir = new javax.swing.JMenuItem();
+        jMenuItemAlterar = new javax.swing.JMenuItem();
+        jMenuItemExcluir = new javax.swing.JMenuItem();
+        jMenuItemConsultar = new javax.swing.JMenuItem();
 
         jMenu1.setText("jMenu1");
 
@@ -40,32 +40,32 @@ public class Menu extends javax.swing.JFrame {
 
         jMenu7.setText("Noticias");
 
-        jMenuItem6.setText("Incluir");
-        jMenuItem6.addActionListener(new java.awt.event.ActionListener() {
+        jMenuItemIncluir.setText("Incluir");
+        jMenuItemIncluir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem6ActionPerformed(evt);
+                jMenuItemIncluirActionPerformed(evt);
             }
         });
-        jMenu7.add(jMenuItem6);
+        jMenu7.add(jMenuItemIncluir);
 
-        jMenuItem22.setText("Alterar");
-        jMenuItem22.addActionListener(new java.awt.event.ActionListener() {
+        jMenuItemAlterar.setText("Alterar");
+        jMenuItemAlterar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem22ActionPerformed(evt);
+                jMenuItemAlterarActionPerformed(evt);
             }
         });
-        jMenu7.add(jMenuItem22);
+        jMenu7.add(jMenuItemAlterar);
 
-        jMenuItem23.setText("Excluir");
-        jMenuItem23.addActionListener(new java.awt.event.ActionListener() {
+        jMenuItemExcluir.setText("Excluir");
+        jMenuItemExcluir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem23ActionPerformed(evt);
+                jMenuItemExcluirActionPerformed(evt);
             }
         });
-        jMenu7.add(jMenuItem23);
+        jMenu7.add(jMenuItemExcluir);
 
-        jMenuItem24.setText("Consultar");
-        jMenu7.add(jMenuItem24);
+        jMenuItemConsultar.setText("Consultar");
+        jMenu7.add(jMenuItemConsultar);
 
         jMenuBar1.add(jMenu7);
 
@@ -85,33 +85,33 @@ public class Menu extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jMenuItem6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem6ActionPerformed
+    private void jMenuItemIncluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemIncluirActionPerformed
         // TODO add your handling code here:
         String operacao = "Incluir";
         FormNoticia acessoUsuario = new FormNoticia(operacao);
         acessoUsuario.setVisible(true);
-    }//GEN-LAST:event_jMenuItem6ActionPerformed
+    }//GEN-LAST:event_jMenuItemIncluirActionPerformed
 
-    private void jMenuItem23ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem23ActionPerformed
-        String operacao = "Exclusão";
+    private void jMenuItemExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemExcluirActionPerformed
+        String operacao = "PesquisaExclusao";
         FormNoticia acessoUsuario = new FormNoticia(operacao);
         acessoUsuario.setVisible(true);
-    }//GEN-LAST:event_jMenuItem23ActionPerformed
+    }//GEN-LAST:event_jMenuItemExcluirActionPerformed
 
-    private void jMenuItem22ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem22ActionPerformed
-        String operacao = "Alterar";
+    private void jMenuItemAlterarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemAlterarActionPerformed
+        String operacao = "PesquisaAlterar";
         FormNoticia acessoUsuario = new FormNoticia(operacao);
         acessoUsuario.setVisible(true);
-    }//GEN-LAST:event_jMenuItem22ActionPerformed
+    }//GEN-LAST:event_jMenuItemAlterarActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu7;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItem22;
-    private javax.swing.JMenuItem jMenuItem23;
-    private javax.swing.JMenuItem jMenuItem24;
-    private javax.swing.JMenuItem jMenuItem6;
+    private javax.swing.JMenuItem jMenuItemAlterar;
+    private javax.swing.JMenuItem jMenuItemConsultar;
+    private javax.swing.JMenuItem jMenuItemExcluir;
+    private javax.swing.JMenuItem jMenuItemIncluir;
     // End of variables declaration//GEN-END:variables
 }

@@ -5,6 +5,7 @@
 package DAO;
 
 //import Uteis.DateParser;
+import CLASSES.Noticia;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.Statement;
