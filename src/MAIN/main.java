@@ -8,10 +8,9 @@ import VIEW.Menu;
  */
 
 /**
- *
- * @author Alunos
+ * @author SaneaSP
  */
-public class Aplicacao {
+public class main {
 
     public static void main(String[] args) {
         Menu menu = new Menu();

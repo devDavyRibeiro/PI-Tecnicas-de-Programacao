@@ -4,7 +4,6 @@
  */
 package DAO;
 
-//import Uteis.DateParser;
 import CLASSES.Noticia;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -16,7 +15,7 @@ import javax.swing.JOptionPane;
 import java.util.logging.Level;
 /**
  *
- * @author Trabalhos
+ * @author SaneaSP
  */
 public class connectDAO {
     Connection con;
@@ -24,7 +23,7 @@ public class connectDAO {
 
         //JOptionPane.showMessageDialog(null, "Inicia a classe para conexão com SQL SERVER!");
  
-        String caminho = "jdbc:sqlserver://localhost:1433;databaseName=MOV_CONTA_CORRENTE;"
+        String caminho = "jdbc:sqlserver://localhost:1433;databaseName=PI_JAVA;"
                 + "encrypt=true;trustServerCertificate=true;"; 
         String usuario = "sa";
         String senha = ".";
@@ -39,7 +38,6 @@ public class connectDAO {
             JOptionPane.showMessageDialog(null, "\n Erro de conexão, connectDAO - Código => "+erro.getErrorCode());
         }
         return con;
-        // con.close();
     }
     
     public void insereRegistros(String tabela, String strDados){
@@ -47,7 +45,7 @@ public class connectDAO {
         Statement stmt;
         try {
             stmt = con.createStatement();
-            String sql = "Insert into dbo. " + tabela + "Values (" + strDados + ")";
+            String sql = "Insert into dbo. " + tabela + " Values (" + strDados + ")";
             try {
                 stmt.execute(sql);
                 JOptionPane.showMessageDialog(null, "Inclusão executada com sucesso");
