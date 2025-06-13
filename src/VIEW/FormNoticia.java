@@ -4,27 +4,26 @@
  */
 package VIEW;
 import CLASSES.Noticia;
+import CLASSES.Operacoes;
 import DAO.connectDAO;
 /**
  *
  * @author Trabalhos
  */
-public class FormNoticia extends javax.swing.JFrame {
-    private String operacaoGlobal;
-    private String operacaoAtiva;
+public final class FormNoticia extends javax.swing.JFrame {
+    private Operacoes operacaoGlobal;
+    
 
     public FormNoticia() {
         initComponents();
     }
 
-    public FormNoticia(String operacao){
+    public FormNoticia(Operacoes operacao){
         initComponents();
         
         setOperacaoGlobal(operacao);
         
-        setOperacaoAtiva("Incluir");
-        
-        if(getOperacaoAtiva().equals(getOperacaoGlobal())){
+        if(getOperacaoGlobal() == Operacoes.INCLUIR){
             jLabelTituloForm.setText("Notícia - Cadastrar");
             setVisibleForm(true);
             jTextField_ID.setVisible(false);
@@ -33,8 +32,7 @@ public class FormNoticia extends javax.swing.JFrame {
             jButtonPesquisar.setVisible(false);
         }
         
-        setOperacaoAtiva("PesquisaAlterar");
-        if(getOperacaoAtiva().equals(getOperacaoGlobal())){
+        if(getOperacaoGlobal() == Operacoes.PESQUISAR_ALTERACAO){
             jLabelTituloForm.setText("Notícia - Editar");
             setVisibleForm(false);
             jTextField_ID.setVisible(true);
@@ -43,8 +41,7 @@ public class FormNoticia extends javax.swing.JFrame {
             jButtonSuccess.setVisible(false);
         }
         
-        setOperacaoAtiva("PesquisaExclusao");
-        if(getOperacaoAtiva().equals(getOperacaoGlobal())){
+        if(getOperacaoGlobal() == Operacoes.PESQUISAR_EXCLUIR){
             jLabelTituloForm.setText("Notícia - Excluir");
             setVisibleForm(false);
             jTextField_ID.setVisible(true);
@@ -228,19 +225,12 @@ public class FormNoticia extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-    public String getOperacaoAtiva() {
-        return operacaoAtiva;
-    }
 
-    public void setOperacaoAtiva(String operacaoAtiva) {
-        this.operacaoAtiva = operacaoAtiva;
-    }
-
-    public String getOperacaoGlobal() {
+    public Operacoes getOperacaoGlobal() {
         return operacaoGlobal;
     }
 
-    public void setOperacaoGlobal(String operacaoGlobal) {
+    public void setOperacaoGlobal(Operacoes operacaoGlobal) {
         this.operacaoGlobal = operacaoGlobal;
     }
     
@@ -256,14 +246,12 @@ public class FormNoticia extends javax.swing.JFrame {
         jTextField_IDAdmin.setVisible(visibilidade);
     }
     private void setNoticia(Noticia noticia){
-        noticia.setId(Integer.parseInt(jTextField_ID.getText()));
         noticia.setTitulo(jTextField_Titulo.getText());
         noticia.setDescricao(jTextAreaDescricao.getText());
         noticia.setDataPuclicacao(jTextField_Data.getText());
         noticia.setIdAdmin(Integer.parseInt(jTextField_IDAdmin.getText()));
     }
     private void setForm(Noticia noticia){
-        jTextField_ID.setText(Integer.toString(noticia.getId()));
         jTextField_Titulo.setText(noticia.getTitulo());
         jTextAreaDescricao.setText(noticia.getDescricao());
         jTextField_Data.setText(noticia.getDataPuclicacao());
@@ -280,7 +268,7 @@ public class FormNoticia extends javax.swing.JFrame {
         Noticia noticia;
         connectDAO con = new  connectDAO();
         
-        noticia = con.pesquisaNoticia("ID = '" + jTextField_ID.getText() + "'");
+        noticia = con.pesquisaNoticia("id_noticia ='" + jTextField_ID.getText() + "'");
         
         setForm(noticia);
         setVisibleForm(true);
@@ -292,10 +280,11 @@ public class FormNoticia extends javax.swing.JFrame {
     }//GEN-LAST:event_jButtonCancelActionPerformed
 
     private void jButtonSuccessActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSuccessActionPerformed
-        setOperacaoAtiva("Inserir");   
-        if(getOperacaoAtiva().equals(getOperacaoGlobal())){
+        if( getOperacaoGlobal() == Operacoes.INCLUIR){
+           
             Noticia noticia = new Noticia();
             connectDAO con = new  connectDAO();
+            
             setNoticia(noticia);
             
             con.insereRegistros("Noticias", noticia.valuesInsereNoticia() );
@@ -304,13 +293,12 @@ public class FormNoticia extends javax.swing.JFrame {
             LimparForm();
         }
         
-        setOperacaoAtiva("Alteracao");
-        if(getOperacaoAtiva().equals(getOperacaoGlobal())){
+        if(getOperacaoGlobal() == Operacoes.ALTERAR){
             Noticia noticia = new Noticia();
             connectDAO con = new  connectDAO();
             
             setNoticia(noticia);
-            con.alteraRegistroJFDB("Noticias", noticia.valuesAlterarNoticia(), "ID='" + jTextField_ID.getText() + "'" );
+            con.alteraRegistroJFDB("Noticias", noticia.valuesAlterarNoticia(), "id_noticia='" + jTextField_ID.getText() + "'" );
             
             setVisibleForm(false);
             LimparForm();
@@ -318,22 +306,22 @@ public class FormNoticia extends javax.swing.JFrame {
     }//GEN-LAST:event_jButtonSuccessActionPerformed
 
     private void jButtonPesquisarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonPesquisarActionPerformed
-        setOperacaoAtiva("PesquisaAlterar");
-        if(getOperacaoAtiva().equals(getOperacaoGlobal())){
+
+        if(getOperacaoGlobal() == Operacoes.PESQUISAR_ALTERACAO){
             PesquisarNoticia();
             jLabel_ID.setEnabled(false);
             jButtonSuccess.setVisible(true);
             jButtonSuccess.setText("Alterar");
-            setOperacaoGlobal("Alteracao"); 
+            setOperacaoGlobal(Operacoes.ALTERAR); 
         }
-        setOperacaoAtiva("PesquisaExclusao");
-        if(getOperacaoAtiva().equals(getOperacaoGlobal())){
+        if(getOperacaoGlobal() == Operacoes.PESQUISAR_EXCLUIR){
             PesquisarNoticia();
             jLabel_ID.setEnabled(false);
             jButtonSuccess.setVisible(true);
             jButtonSuccess.setText("Excluir");
-            setOperacaoGlobal("Exclusao"); 
+            setOperacaoGlobal(Operacoes.EXCLUIR); 
         }
+
     }//GEN-LAST:event_jButtonPesquisarActionPerformed
 
     public static void main(String args[]) {

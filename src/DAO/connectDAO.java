@@ -24,7 +24,7 @@ public class connectDAO {
 
         //JOptionPane.showMessageDialog(null, "Inicia a classe para conexão com SQL SERVER!");
  
-        String caminho = "jdbc:sqlserver://localhost:1433;databaseName=MOV_CONTA_CORRENTE;"
+        String caminho = "jdbc:sqlserver://localhost:1433;databaseName=PI_JAVA;"
                 + "encrypt=true;trustServerCertificate=true;"; 
         String usuario = "sa";
         String senha = ".";
@@ -47,8 +47,9 @@ public class connectDAO {
         Statement stmt;
         try {
             stmt = con.createStatement();
-            String sql = "Insert into dbo. " + tabela + "Values (" + strDados + ")";
+            String sql = "Insert into dbo." + tabela + " Values (" + strDados + ")";
             try {
+                JOptionPane.showMessageDialog(null,sql);
                 stmt.execute(sql);
                 JOptionPane.showMessageDialog(null, "Inclusão executada com sucesso");
                 con.close();
@@ -125,5 +126,27 @@ public class connectDAO {
             Logger.getLogger(connectDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+    public ResultSet consultaNoticia(){
+        con = connectDB();
+        Statement stmt;
+        try {
+            stmt = con.createStatement();
+            String sql = "SELECT * FROM NOTICIA";
+
+            try {
+                ResultSet dados;
+                dados = stmt.executeQuery(sql);
+                con.close();
+                return dados;
+            } catch(SQLException erro){
+                JOptionPane.showMessageDialog(null, "Erro de conexão, connectDAO - Mensagem => "+erro.getMessage());
+                JOptionPane.showMessageDialog(null, "\n Erro de conexão, connectDAO - Estado => "+erro.getSQLState());
+                JOptionPane.showMessageDialog(null, "\n Erro de conexão, connectDAO - Código => "+erro.getErrorCode());
+            }
+            
+        } catch(SQLException ex){
+            Logger.getLogger(connectDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
 }

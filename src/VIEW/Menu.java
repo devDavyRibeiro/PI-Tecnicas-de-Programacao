@@ -4,6 +4,8 @@
  */
 package VIEW;
 
+import CLASSES.Operacoes;
+
 /**
  *
  * @author Alunos
@@ -65,6 +67,11 @@ public class Menu extends javax.swing.JFrame {
         jMenu7.add(jMenuItemExcluir);
 
         jMenuItemConsultar.setText("Consultar");
+        jMenuItemConsultar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemConsultarActionPerformed(evt);
+            }
+        });
         jMenu7.add(jMenuItemConsultar);
 
         jMenuBar1.add(jMenu7);
@@ -87,22 +94,26 @@ public class Menu extends javax.swing.JFrame {
 
     private void jMenuItemIncluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemIncluirActionPerformed
         // TODO add your handling code here:
-        String operacao = "Incluir";
-        FormNoticia acessoUsuario = new FormNoticia(operacao);
+        FormNoticia acessoUsuario = new FormNoticia(Operacoes.INCLUIR);
         acessoUsuario.setVisible(true);
     }//GEN-LAST:event_jMenuItemIncluirActionPerformed
 
     private void jMenuItemExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemExcluirActionPerformed
-        String operacao = "PesquisaExclusao";
-        FormNoticia acessoUsuario = new FormNoticia(operacao);
+
+        FormNoticia acessoUsuario = new FormNoticia(Operacoes.EXCLUIR);
         acessoUsuario.setVisible(true);
     }//GEN-LAST:event_jMenuItemExcluirActionPerformed
 
     private void jMenuItemAlterarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemAlterarActionPerformed
-        String operacao = "PesquisaAlterar";
-        FormNoticia acessoUsuario = new FormNoticia(operacao);
+        FormNoticia acessoUsuario = new FormNoticia(Operacoes.PESQUISAR_ALTERACAO);
         acessoUsuario.setVisible(true);
     }//GEN-LAST:event_jMenuItemAlterarActionPerformed
+
+    private void jMenuItemConsultarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemConsultarActionPerformed
+        tableNoticia tableView = new tableNoticia();
+        tableView.setVisible(true);
+     
+    }//GEN-LAST:event_jMenuItemConsultarActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

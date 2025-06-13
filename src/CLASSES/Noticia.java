@@ -47,7 +47,7 @@ public class Noticia {
     }
 
     public void setTitulo(String titulo) {
-        if(titulo.isBlank() && titulo.isEmpty()){
+        if(titulo == null && titulo.isEmpty() && titulo.isBlank()){
             JOptionPane.showMessageDialog(null, "Título Vazio"); 
         }
         else if(titulo.length() > 150){
@@ -64,7 +64,7 @@ public class Noticia {
     }
 
     public void setDescricao(String descricao) {
-        if(descricao.isBlank() && titulo.isEmpty()){
+        if(descricao == null && descricao.isBlank() && titulo.isEmpty()){
             JOptionPane.showMessageDialog(null, "Descrição vazia"); 
         }
         else if(descricao.length() > 500){
