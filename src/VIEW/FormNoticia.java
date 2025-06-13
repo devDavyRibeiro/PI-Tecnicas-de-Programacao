@@ -3,12 +3,14 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package VIEW;
+
 import CLASSES.Noticia;
 import CLASSES.Operacoes;
 import DAO.connectDAO;
+
 /**
  *
- * @author Trabalhos
+ * @author SaneaSP
  */
 public final class FormNoticia extends javax.swing.JFrame {
     private Operacoes operacaoGlobal;
@@ -289,7 +291,6 @@ public final class FormNoticia extends javax.swing.JFrame {
             
             con.insereRegistros("Noticias", noticia.valuesInsereNoticia() );
             
-            setVisibleForm(false);
             LimparForm();
         }
         

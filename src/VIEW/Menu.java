@@ -8,7 +8,7 @@ import CLASSES.Operacoes;
 
 /**
  *
- * @author Alunos
+ * @author SaneaSP
  */
 public class Menu extends javax.swing.JFrame {
 
