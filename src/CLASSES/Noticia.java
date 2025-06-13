@@ -4,42 +4,44 @@
  */
 package CLASSES;
 
+import static CLASSES.DataValidation.validarData;
 import javax.swing.JOptionPane;
+import java.text.SimpleDateFormat;
+import java.text.ParseException;
 
 /**
  *
- * @author Trabalhos
+ * @author SaneaSP
  */
 public class Noticia {
+
     private int id;
     private String titulo;
     private String descricao;
     private int idAdmin;
-    private String dataPuclicacao;
+    private String dataPublicacao;
+    private String formatoData = "dd/MM/yyyy";
 
-    public Noticia(int id, String titulo, String descricao, int idAdmin, String dataPuclicacao) {
+    public Noticia(int id, String titulo, String descricao, int idAdmin, String dataPublicacao) {
         this.id = id;
         this.titulo = titulo;
         this.descricao = descricao;
         this.idAdmin = idAdmin;
-        this.dataPuclicacao = dataPuclicacao;
+        this.dataPublicacao = dataPublicacao;
     }
 
     public Noticia() {
     }
-   
 
     public int getId() {
         return id;
     }
 
     public void setId(int id) {
-       if(id == 0){
-           JOptionPane.showMessageDialog(null, "Id passado com valor 0");  
-       }
-       else{
-           this.id = id;
-       }
+        if (id == 0) {
+            JOptionPane.showMessageDialog(null, "Id passado com valor 0");
+        }
+        this.id = id;
     }
 
     public String getTitulo() {
@@ -47,16 +49,12 @@ public class Noticia {
     }
 
     public void setTitulo(String titulo) {
-        if(titulo.isBlank() && titulo.isEmpty()){
-            JOptionPane.showMessageDialog(null, "Título Vazio"); 
+        if (titulo.isBlank() && titulo.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Título Vazio");
+        } else if (titulo.length() > 150) {
+            JOptionPane.showMessageDialog(null, "Título muito grande");
         }
-        else if(titulo.length() > 150){
-            JOptionPane.showMessageDialog(null, "Título muito grande"); 
-        }
-        else{
-            this.titulo = titulo;
-        }
-        
+        this.titulo = titulo;
     }
 
     public String getDescricao() {
@@ -64,15 +62,12 @@ public class Noticia {
     }
 
     public void setDescricao(String descricao) {
-        if(descricao.isBlank() && titulo.isEmpty()){
-            JOptionPane.showMessageDialog(null, "Descrição vazia"); 
+        if (descricao.isBlank() && titulo.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Descrição vazia");
+        } else if (descricao.length() > 500) {
+            JOptionPane.showMessageDialog(null, "Descrição muito grande");
         }
-        else if(descricao.length() > 500){
-            JOptionPane.showMessageDialog(null, "Descrição muito grande"); 
-        }
-        else{
-            this.descricao = descricao;
-        }
+        this.descricao = descricao;
     }
 
     public int getIdAdmin() {
@@ -80,47 +75,41 @@ public class Noticia {
     }
 
     public void setIdAdmin(int idAdmin) {
-        if(idAdmin == 0){
-           JOptionPane.showMessageDialog(null, "Id passado com valor 0");  
-       }
-       else{
-           this.idAdmin = idAdmin;
-       }
+        if (idAdmin == 0) {
+            JOptionPane.showMessageDialog(null, "Id passado com valor 0");
+        }
+        this.idAdmin = idAdmin;
     }
 
     public String getDataPuclicacao() {
-        return dataPuclicacao;
+        return dataPublicacao;
     }
 
-    public void setDataPuclicacao(String dataPuclicacao) {
-        if(dataPuclicacao.isBlank() && dataPuclicacao.isEmpty()){
-            JOptionPane.showMessageDialog(null, "Descrição vazia"); 
+    public void setDataPuclicacao(String dataPublicacao) {
+        if (dataPublicacao.isBlank() && dataPublicacao.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Descrição vazia");
+        } else if (validarData(dataPublicacao, formatoData)) {
+            JOptionPane.showMessageDialog(null, "O formato da data informana não"
+                    + " corresponde ao padrão: " + formatoData);
         }
-        else if(dataPuclicacao.length() != 10){
-            JOptionPane.showMessageDialog(null, "Data fora do tamanho(DD/MM/YYYY)"); 
-        }
-        else{
-            this.dataPuclicacao = dataPuclicacao;
-        }
+        this.dataPublicacao = dataPublicacao;
     }
-    
-    public String valuesInsereNoticia(){
-        String dados = 
-        "'" + getTitulo() + "'," +
-        "'" + getDescricao() + "'," +
-        "'" + getDataPuclicacao()+ "'," +
-        "'" + getIdAdmin()+ "'" 
-        ;
+
+    public String valuesInsereNoticia() {
+        String dados
+                = "'" + getTitulo() + "',"
+                + "'" + getDescricao() + "',"
+                + "'" + getDataPuclicacao() + "',"
+                + "'" + getIdAdmin() + "'";
         return dados;
     }
-     
-    public String valuesAlterarNoticia(){
-        String dados =
-        "titulo='" + getTitulo() + "'," +
-        "descricao='" + getDescricao()+ "'," +
-        "data='" + getDataPuclicacao()+ "'," +
-        "fkAdmin='" + getIdAdmin()+ "'" 
-        ;
+
+    public String valuesAlterarNoticia() {
+        String dados
+                = "titulo='" + getTitulo() + "',"
+                + "descricao='" + getDescricao() + "',"
+                + "data='" + getDataPuclicacao() + "',"
+                + "fkAdmin='" + getIdAdmin() + "'";
         return dados;
     }
 
