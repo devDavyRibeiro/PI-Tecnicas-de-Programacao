@@ -24,21 +24,20 @@ public class connectDAO {
  
          //JOptionPane.showMessageDialog(null, "Inicia a classe para conexão com SQL SERVER!");
  
-        /* NO NOTE DA FATEC */
+        /* NO NOTE DA FATEC 
         String caminho = "jdbc:sqlserver://localhost:1433;databaseName=PI_JAVA;"
                 + "encrypt=true;trustServerCertificate=true;"; 
         String usuario = "sa";
         String senha = ".";
         
-        /* 
-            Em casa
+        /* Em casa */
         
         String caminho = "jdbc:sqlserver://localhost:1433;databaseName=PI_JAVA;"
                 + "integratedSecurity=true;encrypt=true;trustServerCertificate=true;"; 
 
         String usuario = "";
         String senha = "";
-        */
+       /* */
 
         
         try {

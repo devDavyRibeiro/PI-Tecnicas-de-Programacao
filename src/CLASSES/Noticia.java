@@ -11,35 +11,34 @@ import javax.swing.JOptionPane;
  * @author Trabalhos
  */
 public class Noticia {
+
     private int id;
     private String titulo;
     private String descricao;
     private int idAdmin;
-    private String dataPuclicacao;
+    private String dataPublicacao;
 
-    public Noticia(int id, String titulo, String descricao, int idAdmin, String dataPuclicacao) {
+    public Noticia(int id, String titulo, String descricao, int idAdmin, String dataPublicacao) {
         this.id = id;
         this.titulo = titulo;
         this.descricao = descricao;
         this.idAdmin = idAdmin;
-        this.dataPuclicacao = dataPuclicacao;
+        this.dataPublicacao = dataPublicacao;
     }
 
     public Noticia() {
     }
-   
 
     public int getId() {
         return id;
     }
 
     public void setId(int id) {
-       if(id == 0){
-           JOptionPane.showMessageDialog(null, "Id passado com valor 0");  
-       }
-       else{
-           this.id = id;
-       }
+        if (id <= 0) {
+            JOptionPane.showMessageDialog(null, "O campo id da noticia não pode ser menor ou igual a zero");
+            return;
+        } 
+        this.id = id;
     }
 
     public String getTitulo() {
@@ -47,16 +46,19 @@ public class Noticia {
     }
 
     public void setTitulo(String titulo) {
-        if(titulo == null && titulo.isEmpty() && titulo.isBlank()){
-            JOptionPane.showMessageDialog(null, "Título Vazio"); 
+        if (titulo == null || titulo.isEmpty() || titulo.isBlank()) {
+            JOptionPane.showMessageDialog(null, "O título é obrigatório");
+            return;
         }
-        else if(titulo.length() > 150){
-            JOptionPane.showMessageDialog(null, "Título muito grande"); 
+        if (titulo.length() > 100) {
+            JOptionPane.showMessageDialog(null, "O título não deve conter mais do que 100 caracteres");
+            return;
         }
-        else{
-            this.titulo = titulo;
+        if (titulo.length() < 15) {
+            JOptionPane.showMessageDialog(null,"O título deve conter pelo menos 15 caracteres");
+            return;
         }
-        
+        this.titulo = titulo;
     }
 
     public String getDescricao() {
@@ -64,15 +66,21 @@ public class Noticia {
     }
 
     public void setDescricao(String descricao) {
-        if(descricao == null && descricao.isBlank() && titulo.isEmpty()){
-            JOptionPane.showMessageDialog(null, "Descrição vazia"); 
+        if (descricao == null || descricao.isBlank() || descricao.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "A descrição é obrigatória");
+            return;
         }
-        else if(descricao.length() > 500){
-            JOptionPane.showMessageDialog(null, "Descrição muito grande"); 
+
+        if(descricao.length() < 30){
+            JOptionPane.showMessageDialog(null, "A descrição deve ter no mínimo 30 caracteres");
+            return;
         }
-        else{
-            this.descricao = descricao;
+        
+        if (descricao.length() > 500) {
+            JOptionPane.showMessageDialog(null, "A descrição deve ter no máximo 500 caracteres");
+            return;
         }
+        this.descricao = descricao;
     }
 
     public int getIdAdmin() {
@@ -80,47 +88,45 @@ public class Noticia {
     }
 
     public void setIdAdmin(int idAdmin) {
-        if(idAdmin == 0){
-           JOptionPane.showMessageDialog(null, "Id passado com valor 0");  
-       }
-       else{
-           this.idAdmin = idAdmin;
-       }
+        if (idAdmin <= 0) {
+            JOptionPane.showMessageDialog(null, "O campo id do admin não pode ser menor ou igual a zero");
+            return;
+        } 
+        this.idAdmin = idAdmin;
     }
 
-    public String getDataPuclicacao() {
-        return dataPuclicacao;
+    public String getDataPublicacao() {
+        return dataPublicacao;
     }
 
-    public void setDataPuclicacao(String dataPuclicacao) {
-        if(dataPuclicacao.isBlank() && dataPuclicacao.isEmpty()){
-            JOptionPane.showMessageDialog(null, "Descrição vazia"); 
-        }
-        else if(dataPuclicacao.length() != 10){
-            JOptionPane.showMessageDialog(null, "Data fora do tamanho(DD/MM/YYYY)"); 
-        }
-        else{
-            this.dataPuclicacao = dataPuclicacao;
-        }
+    public void setDataPuclicacao(String dataPublicacao) {
+        if (dataPublicacao == null || dataPublicacao.isBlank() || dataPublicacao.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "A data de publicação é obrigatória");
+            return;
+        } 
+        if (!dataPublicacao.matches("\\d{2}/\\d{2}/\\d{4}")) {
+            JOptionPane.showMessageDialog(null, "O formato da data deve ser dd/mm/yyyy");
+            return;
+        } 
+        
+        this.dataPublicacao = dataPublicacao;
     }
-    
-    public String valuesInsereNoticia(){
-        String dados = 
-        "'" + getTitulo() + "'," +
-        "'" + getDescricao() + "'," +
-        "'" + getDataPuclicacao()+ "'," +
-        "'" + getIdAdmin()+ "'" 
-        ;
+
+    public String valuesInsereNoticia() {
+        String dados
+                = "'" + getTitulo() + "',"
+                + "'" + getDescricao() + "',"
+                + "'" + getDataPublicacao() + "',"
+                + "'" + getIdAdmin() + "'";
         return dados;
     }
-     
-    public String valuesAlterarNoticia(){
-        String dados =
-        "titulo='" + getTitulo() + "'," +
-        "descricao='" + getDescricao()+ "'," +
-        "data='" + getDataPuclicacao()+ "'," +
-        "fkAdmin='" + getIdAdmin()+ "'" 
-        ;
+
+    public String valuesAlterarNoticia() {
+        String dados
+                = "titulo='" + getTitulo() + "',"
+                + "descricao='" + getDescricao() + "',"
+                + "data='" + getDataPublicacao() + "',"
+                + "fkAdmin='" + getIdAdmin() + "'";
         return dados;
     }
 

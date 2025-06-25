@@ -24,6 +24,5 @@ public class DataValidation {
         } catch (ParseException e) {
             return false;
         }
-    }
-    
+    }  
 }

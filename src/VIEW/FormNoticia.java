@@ -7,6 +7,7 @@ package VIEW;
 import CLASSES.Noticia;
 import CLASSES.Operacoes;
 import DAO.connectDAO;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -75,7 +76,7 @@ public final class FormNoticia extends javax.swing.JFrame {
         jSeparator2 = new javax.swing.JSeparator();
         jButtonPesquisar = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jLabel_ID.setFont(new java.awt.Font("Lucida Sans", 0, 12)); // NOI18N
         jLabel_ID.setText("ID");
@@ -251,12 +252,21 @@ public final class FormNoticia extends javax.swing.JFrame {
         noticia.setTitulo(jTextField_Titulo.getText());
         noticia.setDescricao(jTextAreaDescricao.getText());
         noticia.setDataPuclicacao(jTextField_Data.getText());
-        noticia.setIdAdmin(Integer.parseInt(jTextField_IDAdmin.getText()));
+        String idAdminTexto = jTextField_IDAdmin.getText();
+        if (idAdminTexto != null && !idAdminTexto.isBlank()) {
+            try {
+                noticia.setIdAdmin(Integer.parseInt(idAdminTexto));
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(null, "ID do admin deve ser um número inteiro.");
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Campo de ID do admin está vazio.");
+        }
     }
     private void setForm(Noticia noticia){
         jTextField_Titulo.setText(noticia.getTitulo());
         jTextAreaDescricao.setText(noticia.getDescricao());
-        jTextField_Data.setText(noticia.getDataPuclicacao());
+        jTextField_Data.setText(noticia.getDataPublicacao());
         jTextField_IDAdmin.setText(Integer.toString(noticia.getIdAdmin()));
     }
     private void LimparForm(){
