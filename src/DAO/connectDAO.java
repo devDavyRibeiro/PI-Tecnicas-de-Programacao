@@ -20,14 +20,25 @@ import java.util.logging.Level;
 public class connectDAO {
     Connection con;
     public Connection connectDB(){
-
-        //JOptionPane.showMessageDialog(null, "Inicia a classe para conexão com SQL SERVER!");
  
+         //JOptionPane.showMessageDialog(null, "Inicia a classe para conexão com SQL SERVER!");
+ 
+        /* NO NOTE DA FATEC */
         String caminho = "jdbc:sqlserver://localhost:1433;databaseName=PI_JAVA;"
                 + "encrypt=true;trustServerCertificate=true;"; 
         String usuario = "sa";
         String senha = ".";
         
+        /* 
+            Em casa
+        
+        String caminho = "jdbc:sqlserver://localhost:1433;databaseName=PI_JAVA;"
+                + "integratedSecurity=true;encrypt=true;trustServerCertificate=true;"; 
+
+        String usuario = "";
+        String senha = "";
+        */
+
         
         try {
             con = DriverManager.getConnection(caminho, usuario, senha);
