@@ -4,6 +4,7 @@
  */
 package DAO;
 
+//import Uteis.DateParser;
 import CLASSES.Noticia;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -15,7 +16,7 @@ import javax.swing.JOptionPane;
 import java.util.logging.Level;
 /**
  *
- * @author SaneaSP
+ * @author Trabalhos
  */
 public class connectDAO {
     Connection con;
@@ -49,6 +50,7 @@ public class connectDAO {
             JOptionPane.showMessageDialog(null, "\n Erro de conexão, connectDAO - Código => "+erro.getErrorCode());
         }
         return con;
+        // con.close();
     }
     
     public void insereRegistros(String tabela, String strDados){
@@ -56,8 +58,9 @@ public class connectDAO {
         Statement stmt;
         try {
             stmt = con.createStatement();
-            String sql = "Insert into dbo. " + tabela + " Values (" + strDados + ")";
+            String sql = "Insert into dbo." + tabela + " Values (" + strDados + ")";
             try {
+                JOptionPane.showMessageDialog(null,sql);
                 stmt.execute(sql);
                 JOptionPane.showMessageDialog(null, "Inclusão executada com sucesso");
                 con.close();
@@ -134,5 +137,27 @@ public class connectDAO {
             Logger.getLogger(connectDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+    public ResultSet consultaNoticia(){
+        con = connectDB();
+        Statement stmt;
+        try {
+            stmt = con.createStatement();
+            String sql = "SELECT * FROM NOTICIA";
+
+            try {
+                ResultSet dados;
+                dados = stmt.executeQuery(sql);
+                con.close();
+                return dados;
+            } catch(SQLException erro){
+                JOptionPane.showMessageDialog(null, "Erro de conexão, connectDAO - Mensagem => "+erro.getMessage());
+                JOptionPane.showMessageDialog(null, "\n Erro de conexão, connectDAO - Estado => "+erro.getSQLState());
+                JOptionPane.showMessageDialog(null, "\n Erro de conexão, connectDAO - Código => "+erro.getErrorCode());
+            }
+            
+        } catch(SQLException ex){
+            Logger.getLogger(connectDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
 }
