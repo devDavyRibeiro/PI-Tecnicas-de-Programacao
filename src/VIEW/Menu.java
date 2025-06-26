@@ -4,7 +4,7 @@
  */
 package VIEW;
 
-import CLASSES.Operacoes;
+import UTEIS.Operacoes;
 
 /**
  *
@@ -100,7 +100,7 @@ public class Menu extends javax.swing.JFrame {
 
     private void jMenuItemExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemExcluirActionPerformed
 
-        FormNoticia acessoUsuario = new FormNoticia(Operacoes.EXCLUIR);
+        FormNoticia acessoUsuario = new FormNoticia(Operacoes.PESQUISAR_EXCLUIR);
         acessoUsuario.setVisible(true);
     }//GEN-LAST:event_jMenuItemExcluirActionPerformed
 
@@ -110,9 +110,8 @@ public class Menu extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItemAlterarActionPerformed
 
     private void jMenuItemConsultarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemConsultarActionPerformed
-        tableNoticia tableView = new tableNoticia();
+        TableNoticia tableView = new TableNoticia();
         tableView.setVisible(true);
-     
     }//GEN-LAST:event_jMenuItemConsultarActionPerformed
 
 

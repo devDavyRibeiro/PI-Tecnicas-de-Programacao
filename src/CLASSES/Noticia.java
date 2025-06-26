@@ -4,7 +4,9 @@
  */
 package CLASSES;
 
-import javax.swing.JOptionPane;
+import UTEIS.DataValidation;
+import UTEIS.ValidationEnum;
+import UTEIS.ValidationException;
 
 /**
  *
@@ -17,6 +19,7 @@ public class Noticia {
     private String descricao;
     private int idAdmin;
     private String dataPublicacao;
+    private final String dataFormato = "dd/MM/yyyy";
 
     public Noticia(int id, String titulo, String descricao, int idAdmin, String dataPublicacao) {
         this.id = id;
@@ -33,11 +36,10 @@ public class Noticia {
         return id;
     }
 
-    public void setId(int id) {
-        if (id <= 0) {
-            JOptionPane.showMessageDialog(null, "O campo id da noticia não pode ser menor ou igual a zero");
-            return;
-        } 
+    public void setId(int id) throws ValidationException{
+        if (id <= 0) 
+            throw new ValidationException("O campo id da noticia não pode ser menor ou igual a zero", ValidationEnum.ID_NOTICIA_ERROR);
+        
         this.id = id;
     }
 
@@ -45,19 +47,19 @@ public class Noticia {
         return titulo;
     }
 
-    public void setTitulo(String titulo) {
-        if (titulo == null || titulo.isEmpty() || titulo.isBlank()) {
-            JOptionPane.showMessageDialog(null, "O título é obrigatório");
-            return;
-        }
-        if (titulo.length() > 100) {
-            JOptionPane.showMessageDialog(null, "O título não deve conter mais do que 100 caracteres");
-            return;
-        }
-        if (titulo.length() < 15) {
-            JOptionPane.showMessageDialog(null,"O título deve conter pelo menos 15 caracteres");
-            return;
-        }
+    public void setTitulo(String titulo) throws ValidationException {
+        ValidationEnum validationType = ValidationEnum.TITULO_ERROR;
+        if (titulo == null || titulo.isEmpty() || titulo.isBlank()) 
+            throw new ValidationException("O título é obrigatório",validationType);
+        
+        titulo = titulo.trim();
+        
+        if (titulo.length() > 100) 
+            throw new ValidationException("O título não deve conter mais do que 100 caracteres", validationType);
+        
+        if (titulo.length() < 15) 
+            throw new ValidationException("O título deve conter pelo menos 15 caracteres",validationType);
+        
         this.titulo = titulo;
     }
 
@@ -65,21 +67,19 @@ public class Noticia {
         return descricao;
     }
 
-    public void setDescricao(String descricao) {
-        if (descricao == null || descricao.isBlank() || descricao.isEmpty()) {
-            JOptionPane.showMessageDialog(null, "A descrição é obrigatória");
-            return;
-        }
+    public void setDescricao(String descricao) throws ValidationException{
+        ValidationEnum validationType = ValidationEnum.DESCRICAO_ERROR;
+        if (descricao == null || descricao.isBlank() || descricao.isEmpty()) 
+            throw new ValidationException("A descrição é obrigatória", validationType);
 
-        if(descricao.length() < 30){
-            JOptionPane.showMessageDialog(null, "A descrição deve ter no mínimo 30 caracteres");
-            return;
-        }
+        descricao = descricao.trim();
+         
+        if(descricao.length() < 30)
+            throw new ValidationException("A descrição deve ter no mínimo 30 caracteres", validationType);
         
-        if (descricao.length() > 500) {
-            JOptionPane.showMessageDialog(null, "A descrição deve ter no máximo 500 caracteres");
-            return;
-        }
+        if (descricao.length() > 500) 
+            throw new ValidationException("A descrição deve ter no máximo 500 caracteres", validationType);
+        
         this.descricao = descricao;
     }
 
@@ -87,11 +87,9 @@ public class Noticia {
         return idAdmin;
     }
 
-    public void setIdAdmin(int idAdmin) {
-        if (idAdmin <= 0) {
-            JOptionPane.showMessageDialog(null, "O campo id do admin não pode ser menor ou igual a zero");
-            return;
-        } 
+    public void setIdAdmin(int idAdmin) throws ValidationException{
+        if (idAdmin <= 0) 
+            throw new ValidationException("O campo id do admin não pode ser menor ou igual a zero", ValidationEnum.ID_ADMIN_ERROR);
         this.idAdmin = idAdmin;
     }
 
@@ -99,15 +97,21 @@ public class Noticia {
         return dataPublicacao;
     }
 
-    public void setDataPuclicacao(String dataPublicacao) {
-        if (dataPublicacao == null || dataPublicacao.isBlank() || dataPublicacao.isEmpty()) {
-            JOptionPane.showMessageDialog(null, "A data de publicação é obrigatória");
-            return;
-        } 
-        if (!dataPublicacao.matches("\\d{2}/\\d{2}/\\d{4}")) {
-            JOptionPane.showMessageDialog(null, "O formato da data deve ser dd/mm/yyyy");
-            return;
-        } 
+    public void setDataPuclicacao(String dataPublicacao) throws ValidationException{
+        ValidationEnum validationType = ValidationEnum.DATA_PUBLICACAO_ERROR;
+        if (dataPublicacao == null || dataPublicacao.isBlank() || dataPublicacao.isEmpty()) 
+             throw new ValidationException("A data de publicação é obrigatória", validationType);
+        
+        dataPublicacao = dataPublicacao.trim();
+        
+        if (!dataPublicacao.matches("\\d{2}/\\d{2}/\\d{4}")) 
+            throw new ValidationException("O formato da data deve ser dd/mm/yyyy", validationType);
+        
+        if(!DataValidation.validarData(dataPublicacao,dataFormato))
+             throw new ValidationException("A data inserida é inválida", validationType);
+        
+        if(!DataValidation.validarIntervalo(dataPublicacao, dataFormato))
+            throw new ValidationException("A data de publicação deve ser no ano atual ou nos 5 anos anteriores", validationType);        
         
         this.dataPublicacao = dataPublicacao;
     }
@@ -125,8 +129,8 @@ public class Noticia {
         String dados
                 = "titulo='" + getTitulo() + "',"
                 + "descricao='" + getDescricao() + "',"
-                + "data='" + getDataPublicacao() + "',"
-                + "fkAdmin='" + getIdAdmin() + "'";
+                + "data_publicacao='" + getDataPublicacao() + "',"
+                + "id_admin='" + getIdAdmin() + "'";
         return dados;
     }
 

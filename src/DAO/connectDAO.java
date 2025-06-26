@@ -6,6 +6,8 @@ package DAO;
 
 //import Uteis.DateParser;
 import CLASSES.Noticia;
+import UTEIS.DateParser;
+import UTEIS.ValidationException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.Statement;
@@ -61,7 +63,7 @@ public class connectDAO {
             try {
                 JOptionPane.showMessageDialog(null,sql);
                 stmt.execute(sql);
-                JOptionPane.showMessageDialog(null, "Inclusão executada com sucesso");
+                JOptionPane.showMessageDialog(null, "Notícia cadastrada com sucesso");
                 con.close();
             } catch (SQLException erro) {
                 JOptionPane.showMessageDialog(null, "Erro de conexão, connectDAO - Mensagem => "+erro.getMessage());
@@ -73,28 +75,32 @@ public class connectDAO {
         }
 
     }
-    public Noticia pesquisaNoticia(String pesquisaId){
+    public Noticia pesquisaNoticia(String pesquisaId) throws ValidationException{
         Noticia noticiaReturn = new Noticia();
         con = connectDB();
         Statement stmt;
             
         try {
             stmt = con.createStatement();
-            String sql = "SELECT * FROM NOTICIA " + " WHERE " + pesquisaId;
+            String sql = "SELECT * FROM Noticias " + " WHERE " + pesquisaId;
             JOptionPane.showMessageDialog(null, "String de Select: " + sql);
             try {
                 ResultSet dados;
                 dados = stmt.executeQuery(sql);
-                if(dados.next() == false){
-                    JOptionPane.showMessageDialog(null, "Nenhum registro foi encontrado para essa pesquisa");
+                if(dados.next() == false)
                     noticiaReturn = null;
-                }
                 else{
-                    noticiaReturn.setId(dados.getInt(1));
-                    noticiaReturn.setTitulo(dados.getString(2));
-                    noticiaReturn.setDescricao(dados.getString(3));
-                    noticiaReturn.setDataPuclicacao(dados.getString(4));
-                    noticiaReturn.setIdAdmin(dados.getInt(5));
+                    String dataFormatada = DateParser.parseDMA(dados.getString(4));
+                    try {
+                        noticiaReturn.setId(dados.getInt(1));
+                        noticiaReturn.setTitulo(dados.getString(2));
+                        noticiaReturn.setDescricao(dados.getString(3));
+                        noticiaReturn.setDataPuclicacao(dataFormatada);
+                        noticiaReturn.setIdAdmin(dados.getInt(5));
+                    } catch (ValidationException e) {
+                        con.close();
+                        throw e;
+                    }
                 }
                 con.close();
                 return noticiaReturn;
@@ -125,7 +131,7 @@ public class connectDAO {
             
             try{
                 stmt.executeUpdate(sql);
-                JOptionPane.showMessageDialog(null, "Alteração executada com sucesso");
+                JOptionPane.showMessageDialog(null, "Notícia atualizada com sucesso");
             } catch(SQLException erro){
                 JOptionPane.showMessageDialog(null, "Erro de conexão, connectDAO - Mensagem => "+erro.getMessage());
                 JOptionPane.showMessageDialog(null, "\n Erro de conexão, connectDAO - Estado => "+erro.getSQLState());
@@ -136,17 +142,41 @@ public class connectDAO {
             Logger.getLogger(connectDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
+    public void excluiRegistroJFDB(String tabela, String pesquisaID){
+        con = connectDB();
+        Statement stmt;
+        try{
+            stmt = con.createStatement();
+            String sql = "DELETE from dbo." + tabela +
+                  " WHERE id ='" + pesquisaID + "'";
+            
+            JOptionPane.showMessageDialog(null, "String de Delete: " + sql);
+            
+            try{
+                stmt.executeUpdate(sql);
+                JOptionPane.showMessageDialog(null, "Notícia removida com sucesso");
+            } catch(SQLException erro){
+                JOptionPane.showMessageDialog(null, "Erro de conexão, connectDAO - Mensagem => "+erro.getMessage());
+                JOptionPane.showMessageDialog(null, "\n Erro de conexão, connectDAO - Estado => "+erro.getSQLState());
+                JOptionPane.showMessageDialog(null, "\n Erro de conexão, connectDAO - Código => "+erro.getErrorCode());
+            }
+            con.close();
+        } catch(SQLException ex){
+            Logger.getLogger(connectDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
     public ResultSet consultaNoticia(){
         con = connectDB();
         Statement stmt;
         try {
             stmt = con.createStatement();
-            String sql = "SELECT * FROM NOTICIA";
+            String sql = "SELECT * FROM Noticias";
 
             try {
                 ResultSet dados;
                 dados = stmt.executeQuery(sql);
-                con.close();
                 return dados;
             } catch(SQLException erro){
                 JOptionPane.showMessageDialog(null, "Erro de conexão, connectDAO - Mensagem => "+erro.getMessage());

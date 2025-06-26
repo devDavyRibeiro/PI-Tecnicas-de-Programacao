@@ -5,8 +5,10 @@
 package VIEW;
 
 import CLASSES.Noticia;
-import CLASSES.Operacoes;
+import UTEIS.Operacoes;
 import DAO.connectDAO;
+import UTEIS.ValidationEnum;
+import UTEIS.ValidationException;
 import javax.swing.JOptionPane;
 
 /**
@@ -14,46 +16,36 @@ import javax.swing.JOptionPane;
  * @author SaneaSP
  */
 public final class FormNoticia extends javax.swing.JFrame {
+
     private Operacoes operacaoGlobal;
-    
 
     public FormNoticia() {
         initComponents();
     }
 
-    public FormNoticia(Operacoes operacao){
+    public FormNoticia(Operacoes operacao) {
         initComponents();
-        
+
         setOperacaoGlobal(operacao);
-        
-        if(getOperacaoGlobal() == Operacoes.INCLUIR){
+
+        if (getOperacaoGlobal() == Operacoes.INCLUIR) {
             jLabelTituloForm.setText("Notícia - Cadastrar");
-            setVisibleForm(true);
-            jTextField_ID.setVisible(false);
-            jLabel_ID.setVisible(false);
+            setActionForm();
             jButtonSuccess.setText("Cadastrar");
-            jButtonPesquisar.setVisible(false);
         }
-        
-        if(getOperacaoGlobal() == Operacoes.PESQUISAR_ALTERACAO){
+
+        if (getOperacaoGlobal() == Operacoes.PESQUISAR_ALTERACAO) {
             jLabelTituloForm.setText("Notícia - Editar");
-            setVisibleForm(false);
-            jTextField_ID.setVisible(true);
-            jLabel_ID.setVisible(true);
-            jButtonPesquisar.setVisible(true);
-            jButtonSuccess.setVisible(false);
+            setSearchForm();
         }
-        
-        if(getOperacaoGlobal() == Operacoes.PESQUISAR_EXCLUIR){
+
+        if (getOperacaoGlobal() == Operacoes.PESQUISAR_EXCLUIR) {
             jLabelTituloForm.setText("Notícia - Excluir");
-            setVisibleForm(false);
-            jTextField_ID.setVisible(true);
-            jLabel_ID.setVisible(true);
-            jButtonPesquisar.setVisible(true);
-            jButtonSuccess.setVisible(false);
+            setSearchForm();
         }
-        
+
     }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -236,54 +228,118 @@ public final class FormNoticia extends javax.swing.JFrame {
     public void setOperacaoGlobal(Operacoes operacaoGlobal) {
         this.operacaoGlobal = operacaoGlobal;
     }
-    
-    private void setVisibleForm(boolean visibilidade){
+
+    private void setVisibleForm(boolean visibilidade) {
         jLabel_Titulo.setVisible(visibilidade);
         jLabel_Data.setVisible(visibilidade);
         jLabel_Descricao.setVisible(visibilidade);
         jLabel_IdAdmin.setVisible(visibilidade);
-        
+
         jTextField_Titulo.setVisible(visibilidade);
         jTextField_Data.setVisible(visibilidade);
         jTextAreaDescricao.setVisible(visibilidade);
         jTextField_IDAdmin.setVisible(visibilidade);
     }
-    private void setNoticia(Noticia noticia){
-        noticia.setTitulo(jTextField_Titulo.getText());
-        noticia.setDescricao(jTextAreaDescricao.getText());
-        noticia.setDataPuclicacao(jTextField_Data.getText());
-        String idAdminTexto = jTextField_IDAdmin.getText();
-        if (idAdminTexto != null && !idAdminTexto.isBlank()) {
-            try {
-                noticia.setIdAdmin(Integer.parseInt(idAdminTexto));
-            } catch (NumberFormatException e) {
-                JOptionPane.showMessageDialog(null, "ID do admin deve ser um número inteiro.");
+    
+     private void setEditableForm(boolean editable) {
+        jTextField_Titulo.setEditable(editable);
+        jTextField_Data.setEditable(editable);
+        jTextAreaDescricao.setEditable(editable);
+        jTextField_IDAdmin.setEditable(editable);
+    }
+
+    private void setNoticia(Noticia noticia) throws ValidationException {
+        try {
+            noticia.setTitulo(jTextField_Titulo.getText());
+            noticia.setDescricao(jTextAreaDescricao.getText());
+            noticia.setDataPuclicacao(jTextField_Data.getText());
+
+            String idAdminText = jTextField_IDAdmin.getText();
+            if (idAdminText != null && !idAdminText.isBlank() && !idAdminText.isEmpty()) {
+                try {
+                    noticia.setIdAdmin(Integer.parseInt(idAdminText));
+                } catch (NumberFormatException e) {
+                    noticia.setIdAdmin(-1); //Valor inválido sendo passado
+                }
+            } else {
+                throw new ValidationException("O campo id do admin é obrigatório", ValidationEnum.ID_ADMIN_ERROR);
             }
-        } else {
-            JOptionPane.showMessageDialog(null, "Campo de ID do admin está vazio.");
+        } catch (ValidationException valException) {
+            JOptionPane.showMessageDialog(null, valException.getMessage());
+            switch (valException.getTipo()) {
+                case ID_NOTICIA_ERROR ->
+                    jTextField_ID.requestFocus();
+                case ID_ADMIN_ERROR ->
+                    jTextField_IDAdmin.requestFocus();
+                case DESCRICAO_ERROR ->
+                    jTextAreaDescricao.requestFocus();
+                case DATA_PUBLICACAO_ERROR ->
+                    jTextField_Data.requestFocus();
+                case TITULO_ERROR ->
+                    jTextField_Titulo.requestFocus();
+            }
+            throw valException; //repassa o erro para o método de ação do botao de sucesso
         }
     }
-    private void setForm(Noticia noticia){
+
+    private void setForm(Noticia noticia) {
         jTextField_Titulo.setText(noticia.getTitulo());
         jTextAreaDescricao.setText(noticia.getDescricao());
         jTextField_Data.setText(noticia.getDataPublicacao());
         jTextField_IDAdmin.setText(Integer.toString(noticia.getIdAdmin()));
     }
-    private void LimparForm(){
+
+    private void LimparForm() {
         jTextField_ID.setText("");
         jTextField_Titulo.setText("");
         jTextAreaDescricao.setText("");
         jTextField_Data.setText("");
         jTextField_IDAdmin.setText("");
     }
-    private void PesquisarNoticia(){
-        Noticia noticia;
-        connectDAO con = new  connectDAO();
-        
-        noticia = con.pesquisaNoticia("id_noticia ='" + jTextField_ID.getText() + "'");
-        
-        setForm(noticia);
+    
+    private void setSearchForm(){
+        jButtonPesquisar.setVisible(true);
+        jButtonSuccess.setVisible(false);
+        jTextField_ID.setEnabled(true);
+        jLabel_ID.setEnabled(true);
+        setVisibleForm(false);
+    }
+    
+    private void setActionForm(){
+        jButtonPesquisar.setVisible(false);
+        jButtonSuccess.setVisible(true);
+        jTextField_ID.setEnabled(false);
+        jLabel_ID.setEnabled(false);
         setVisibleForm(true);
+    }
+
+    private void PesquisarNoticia() throws ValidationException {
+        Noticia noticia;
+        connectDAO con = new connectDAO();
+
+        try {
+            try {
+                String idNoticiaStr = jTextField_ID.getText();
+                if(idNoticiaStr == null || idNoticiaStr.isBlank() || idNoticiaStr.isEmpty()){
+                    throw new ValidationException("O id da notícia é obrigatório", ValidationEnum.ID_NOTICIA_ERROR);
+                }
+                
+                int idNoticia = Integer.parseInt(idNoticiaStr);
+                noticia = con.pesquisaNoticia("id ='" + idNoticia + "'");
+                
+                if (noticia == null) {
+                    throw new ValidationException("Nenhuma notícia encontrada com esse ID", ValidationEnum.ID_NOTICIA_ERROR);
+                }
+
+                setForm(noticia);
+                setActionForm();
+            } catch (NumberFormatException e) {
+                throw new ValidationException("O id da notícia deve ser numérico", ValidationEnum.ID_NOTICIA_ERROR);
+            }
+        } catch (ValidationException e) {
+            JOptionPane.showMessageDialog(null, e.getMessage());
+            throw e; //repassa o erro para verificação no método de ação do botão
+        }
     }
     private void jButtonCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCancelActionPerformed
         // TODO add your handling code here:
@@ -292,45 +348,66 @@ public final class FormNoticia extends javax.swing.JFrame {
     }//GEN-LAST:event_jButtonCancelActionPerformed
 
     private void jButtonSuccessActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSuccessActionPerformed
-        if( getOperacaoGlobal() == Operacoes.INCLUIR){
-           
-            Noticia noticia = new Noticia();
-            connectDAO con = new  connectDAO();
-            
-            setNoticia(noticia);
-            
-            con.insereRegistros("Noticias", noticia.valuesInsereNoticia() );
-            
-            LimparForm();
+
+        if (getOperacaoGlobal() == Operacoes.INCLUIR) {
+            try {
+                Noticia noticia = new Noticia();
+                connectDAO con = new connectDAO();
+                setNoticia(noticia);
+                con.insereRegistros("Noticias", noticia.valuesInsereNoticia());
+                LimparForm();
+            } catch (ValidationException e) {
+                JOptionPane.showMessageDialog(null, "Não foi possível cadastrar, verifique os campos preenchidos");
+                return;
+            }
+        }
+
+        if (getOperacaoGlobal() == Operacoes.ALTERAR) {
+            try {
+                Noticia noticia = new Noticia();
+                connectDAO con = new connectDAO();
+                setNoticia(noticia);
+                con.alteraRegistroJFDB("Noticias", noticia.valuesAlterarNoticia(), "id='" + jTextField_ID.getText() + "'");
+                LimparForm();
+                setOperacaoGlobal(Operacoes.PESQUISAR_ALTERACAO);
+                setSearchForm();
+            } catch (ValidationException e) {
+                JOptionPane.showMessageDialog(null, "Não foi possível editar a notícia, verifique os campos");
+            }
         }
         
-        if(getOperacaoGlobal() == Operacoes.ALTERAR){
-            Noticia noticia = new Noticia();
-            connectDAO con = new  connectDAO();
-            
-            setNoticia(noticia);
-            con.alteraRegistroJFDB("Noticias", noticia.valuesAlterarNoticia(), "id_noticia='" + jTextField_ID.getText() + "'" );
-            
-            setVisibleForm(false);
+         if (getOperacaoGlobal() == Operacoes.EXCLUIR) {
+            connectDAO con = new connectDAO();
+            con.excluiRegistroJFDB("Noticias", jTextField_ID.getText());
             LimparForm();
+            setOperacaoGlobal(Operacoes.PESQUISAR_EXCLUIR);
+            setEditableForm(true);
+            setSearchForm();
         }
     }//GEN-LAST:event_jButtonSuccessActionPerformed
 
     private void jButtonPesquisarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonPesquisarActionPerformed
 
-        if(getOperacaoGlobal() == Operacoes.PESQUISAR_ALTERACAO){
-            PesquisarNoticia();
-            jLabel_ID.setEnabled(false);
-            jButtonSuccess.setVisible(true);
-            jButtonSuccess.setText("Alterar");
-            setOperacaoGlobal(Operacoes.ALTERAR); 
+        if (getOperacaoGlobal() == Operacoes.PESQUISAR_ALTERACAO) {
+            try {
+                PesquisarNoticia();
+                setActionForm();
+                jButtonSuccess.setText("Alterar");
+                setOperacaoGlobal(Operacoes.ALTERAR);
+            } catch (ValidationException e) {
+                JOptionPane.showMessageDialog(null, "Não foi possível pesquisar, verifique o ID inserido");
+            }
         }
-        if(getOperacaoGlobal() == Operacoes.PESQUISAR_EXCLUIR){
-            PesquisarNoticia();
-            jLabel_ID.setEnabled(false);
-            jButtonSuccess.setVisible(true);
-            jButtonSuccess.setText("Excluir");
-            setOperacaoGlobal(Operacoes.EXCLUIR); 
+        if (getOperacaoGlobal() == Operacoes.PESQUISAR_EXCLUIR) {
+            try {
+                PesquisarNoticia();
+                setActionForm();
+                jButtonSuccess.setText("Excluir");
+                setEditableForm(false);
+                setOperacaoGlobal(Operacoes.EXCLUIR);
+            } catch (ValidationException e) {
+                JOptionPane.showMessageDialog(null, "Não foi possível pesquisar, tente novamente");
+            }
         }
 
     }//GEN-LAST:event_jButtonPesquisarActionPerformed
