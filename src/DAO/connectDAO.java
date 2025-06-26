@@ -97,6 +97,7 @@ public class connectDAO {
                         noticiaReturn.setDescricao(dados.getString(3));
                         noticiaReturn.setDataPuclicacao(dataFormatada);
                         noticiaReturn.setIdAdmin(dados.getInt(5));
+                        JOptionPane.showMessageDialog(null, "Notícia encontrada com sucesso");
                     } catch (ValidationException e) {
                         con.close();
                         throw e;

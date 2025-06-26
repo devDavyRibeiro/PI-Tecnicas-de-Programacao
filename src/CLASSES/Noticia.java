@@ -54,11 +54,12 @@ public class Noticia {
         
         titulo = titulo.trim();
         
+        if (titulo.length() < 15) 
+            throw new ValidationException("O título deve conter pelo menos 15 caracteres",validationType);
+        
         if (titulo.length() > 100) 
             throw new ValidationException("O título não deve conter mais do que 100 caracteres", validationType);
         
-        if (titulo.length() < 15) 
-            throw new ValidationException("O título deve conter pelo menos 15 caracteres",validationType);
         
         this.titulo = titulo;
     }
@@ -69,6 +70,7 @@ public class Noticia {
 
     public void setDescricao(String descricao) throws ValidationException{
         ValidationEnum validationType = ValidationEnum.DESCRICAO_ERROR;
+        
         if (descricao == null || descricao.isBlank() || descricao.isEmpty()) 
             throw new ValidationException("A descrição é obrigatória", validationType);
 
@@ -107,9 +109,11 @@ public class Noticia {
         if (!dataPublicacao.matches("\\d{2}/\\d{2}/\\d{4}")) 
             throw new ValidationException("O formato da data deve ser dd/mm/yyyy", validationType);
         
+        //Verifica se é uma data válida 
         if(!DataValidation.validarData(dataPublicacao,dataFormato))
              throw new ValidationException("A data inserida é inválida", validationType);
         
+        //Verifica se está no intervalo especificado (min 5 anos atrás e max ano atual)
         if(!DataValidation.validarIntervalo(dataPublicacao, dataFormato))
             throw new ValidationException("A data de publicação deve ser no ano atual ou nos 5 anos anteriores", validationType);        
         
@@ -128,9 +132,7 @@ public class Noticia {
     public String valuesAlterarNoticia() {
         String dados
                 = "titulo='" + getTitulo() + "',"
-                + "descricao='" + getDescricao() + "',"
-                + "data_publicacao='" + getDataPublicacao() + "',"
-                + "id_admin='" + getIdAdmin() + "'";
+                + "descricao='" + getDescricao() + "'";
         return dados;
     }
 

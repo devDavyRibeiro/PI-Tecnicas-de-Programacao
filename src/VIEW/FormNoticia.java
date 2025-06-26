@@ -240,8 +240,8 @@ public final class FormNoticia extends javax.swing.JFrame {
         jTextAreaDescricao.setVisible(visibilidade);
         jTextField_IDAdmin.setVisible(visibilidade);
     }
-    
-     private void setEditableForm(boolean editable) {
+
+    private void setEditableForm(boolean editable) {
         jTextField_Titulo.setEditable(editable);
         jTextField_Data.setEditable(editable);
         jTextAreaDescricao.setEditable(editable);
@@ -259,7 +259,7 @@ public final class FormNoticia extends javax.swing.JFrame {
                 try {
                     noticia.setIdAdmin(Integer.parseInt(idAdminText));
                 } catch (NumberFormatException e) {
-                    noticia.setIdAdmin(-1); //Valor inválido sendo passado
+                    throw new ValidationException("O campo id do admin deve ser numérico", ValidationEnum.ID_ADMIN_ERROR);
                 }
             } else {
                 throw new ValidationException("O campo id do admin é obrigatório", ValidationEnum.ID_ADMIN_ERROR);
@@ -296,16 +296,16 @@ public final class FormNoticia extends javax.swing.JFrame {
         jTextField_Data.setText("");
         jTextField_IDAdmin.setText("");
     }
-    
-    private void setSearchForm(){
+
+    private void setSearchForm() {
         jButtonPesquisar.setVisible(true);
         jButtonSuccess.setVisible(false);
         jTextField_ID.setEnabled(true);
         jLabel_ID.setEnabled(true);
         setVisibleForm(false);
     }
-    
-    private void setActionForm(){
+
+    private void setActionForm() {
         jButtonPesquisar.setVisible(false);
         jButtonSuccess.setVisible(true);
         jTextField_ID.setEnabled(false);
@@ -318,27 +318,40 @@ public final class FormNoticia extends javax.swing.JFrame {
         connectDAO con = new connectDAO();
 
         try {
-            try {
-                String idNoticiaStr = jTextField_ID.getText();
-                if(idNoticiaStr == null || idNoticiaStr.isBlank() || idNoticiaStr.isEmpty()){
-                    throw new ValidationException("O id da notícia é obrigatório", ValidationEnum.ID_NOTICIA_ERROR);
-                }
-                
-                int idNoticia = Integer.parseInt(idNoticiaStr);
-                noticia = con.pesquisaNoticia("id ='" + idNoticia + "'");
-                
-                if (noticia == null) {
-                    throw new ValidationException("Nenhuma notícia encontrada com esse ID", ValidationEnum.ID_NOTICIA_ERROR);
-                }
+            String idNoticiaStr = jTextField_ID.getText().trim();
 
-                setForm(noticia);
-                setActionForm();
-            } catch (NumberFormatException e) {
-                throw new ValidationException("O id da notícia deve ser numérico", ValidationEnum.ID_NOTICIA_ERROR);
+            if (idNoticiaStr == null || idNoticiaStr.isBlank() || idNoticiaStr.isEmpty()) {
+                throw new ValidationException("O id da notícia é obrigatório",
+                        ValidationEnum.ID_NOTICIA_ERROR);
             }
+
+            int idNoticia;
+            
+            try {
+                idNoticia = Integer.parseInt(idNoticiaStr);
+            } catch (NumberFormatException e) {
+                throw new ValidationException("O id da notícia deve ser numérico",
+                        ValidationEnum.ID_NOTICIA_ERROR);
+            }
+
+            if (idNoticia <= 0) {
+                throw new ValidationException("O campo id da noticia não pode ser menor ou igual a zero",
+                        ValidationEnum.ID_NOTICIA_ERROR);
+            }
+
+            noticia = con.pesquisaNoticia("id ='" + idNoticia + "'");
+
+            if (noticia == null) {
+                throw new ValidationException("Nenhuma notícia encontrada com o ID: " + idNoticia,
+                        ValidationEnum.ID_NOTICIA_ERROR);
+            }
+
+            setForm(noticia);
+            setActionForm();
+
         } catch (ValidationException e) {
             JOptionPane.showMessageDialog(null, e.getMessage());
-            throw e; //repassa o erro para verificação no método de ação do botão
+            throw e; // Repassa para tratamento superior
         }
     }
     private void jButtonCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCancelActionPerformed
@@ -370,13 +383,15 @@ public final class FormNoticia extends javax.swing.JFrame {
                 con.alteraRegistroJFDB("Noticias", noticia.valuesAlterarNoticia(), "id='" + jTextField_ID.getText() + "'");
                 LimparForm();
                 setOperacaoGlobal(Operacoes.PESQUISAR_ALTERACAO);
+                jTextField_Data.setEditable(true);
+                jTextField_IDAdmin.setEditable(true);
                 setSearchForm();
             } catch (ValidationException e) {
                 JOptionPane.showMessageDialog(null, "Não foi possível editar a notícia, verifique os campos");
             }
         }
-        
-         if (getOperacaoGlobal() == Operacoes.EXCLUIR) {
+
+        if (getOperacaoGlobal() == Operacoes.EXCLUIR) {
             connectDAO con = new connectDAO();
             con.excluiRegistroJFDB("Noticias", jTextField_ID.getText());
             LimparForm();
@@ -392,6 +407,8 @@ public final class FormNoticia extends javax.swing.JFrame {
             try {
                 PesquisarNoticia();
                 setActionForm();
+                jTextField_Data.setEditable(false);
+                jTextField_IDAdmin.setEditable(false);
                 jButtonSuccess.setText("Alterar");
                 setOperacaoGlobal(Operacoes.ALTERAR);
             } catch (ValidationException e) {
