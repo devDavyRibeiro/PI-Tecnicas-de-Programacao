@@ -126,7 +126,9 @@ public final class FormNoticia extends javax.swing.JFrame {
 
         jTextAreaDescricao.setColumns(20);
         jTextAreaDescricao.setFont(new java.awt.Font("Lucida Sans", 0, 12)); // NOI18N
+        jTextAreaDescricao.setLineWrap(true);
         jTextAreaDescricao.setRows(5);
+        jTextAreaDescricao.setWrapStyleWord(true);
         jScrollPane1.setViewportView(jTextAreaDescricao);
 
         jLabelTituloForm.setFont(new java.awt.Font("Lucida Sans", 0, 18)); // NOI18N
